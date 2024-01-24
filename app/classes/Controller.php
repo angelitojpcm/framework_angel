@@ -1,5 +1,5 @@
 <?php
-class Controller {
+class Controller extends View{
     protected $view;
     protected $model;
     protected $data = array();
@@ -8,7 +8,7 @@ class Controller {
 
     public function __construct($params) {
         $this->params = $params;
-        $this->view = new View($params);
+        $this->view = new View();
     }
 
     public function getModel($model) {
@@ -22,11 +22,6 @@ class Controller {
         }
     }
 
-    public function redirect($url) {
-        header("Location: " . $url);
-        exit();
-    }
-
     public function getParams() {
         return $this->params;
     }
@@ -35,7 +30,7 @@ class Controller {
         $this->template = $template;
     }
 
-    public function render($viewName, $data = array()) {
-        $this->view->render($viewName, $data, $this->template);
+    public function renderView($viewName, $data = array(), $template = null) {
+        $this->view->render($viewName, $data, $template);
     }
 }

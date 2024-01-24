@@ -254,12 +254,11 @@ class Angel
         define('CONTROLLER', $current_controller);
         define('METHOD', $current_method);
 
-        //Ejecutando el controlador y el metodo segun se haga la peticion
-
-        $controller = new $controller;
-
         //Obteniendo los parametros de la url
         $params = array_values(($this->uri) ? [] : $this->uri);
+
+        // Instanciando el controlador con los parámetros
+        $controller = new $controller($params);
 
         //LLama al metodo que el usuario solicita
         if (empty($params)) {
