@@ -1166,7 +1166,7 @@ function load_scripts() {
   foreach($Scripts as $script) {
     $scripts = JS . str_replace($dir, '', $script);
     // Verificar si el archivo existe antes de incluirlo
-    if (file_exists($scripts)) {
+    if (file_exists($script)) {
       $App_Scripts[] = 
       [
         'comment' => 'FILE: ' . basename($script),
