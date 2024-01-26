@@ -7,7 +7,7 @@ Año: 2024
 ====================================================*/
 
 // Requerir el archivo de la clase Bee.php
-require_once 'app/classes/Angel.php';
+require_once 'app/classes/App.php';
 
 // Ejecutar el framework bee
-Angel::run();
+App::run();

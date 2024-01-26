@@ -1,6 +1,6 @@
 <?php
 
-class Angel
+class App
 {
     /*====================================================
     Properties of  the framework

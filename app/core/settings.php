@@ -46,7 +46,7 @@ define('FUNCTIONS', APP . 'functions' . DS);
 define('MODELS', APP . 'models' . DS);
 define('LOGS', APP . 'logs' . DS);
 
-define('TEMPLATES', APP . 'templates' . DS);
+define('TEMPLATES', 'templates' . DS);
 define('INCLUDES', TEMPLATES . 'includes' . DS);
 define('MODULES', TEMPLATES . 'modules' . DS);
 define('VIEWS', TEMPLATES . 'views' . DS);
