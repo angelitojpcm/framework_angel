@@ -8,7 +8,6 @@ Año: 2024
 //Definir el uso horario o timezone del sistema segun el usuario
 date_default_timezone_set('America/Bogota');
 
-define('PREPOS', true);
 
 //Languaje
 define('LANG', $this->lng);
@@ -28,10 +27,10 @@ define('SITE_VERSION', '1.0.0');
 //Port and Url of application
 define('PORT', '8848');
 define('PROTOCOL', isset($_SERVER['HTTPS']) ? 'https://' : 'http://');
-define('HOST', $_SERVER['HTTP_HOST'] === 'localhost' ? (PREPOS ? 'localhost:' . PORT : 'localhost') : $_SERVER['HTTP_HOST']);
+define('HOST', $_SERVER['HTTP_HOST'] === 'localhost' ? 'localhost/framework' : $_SERVER['HTTP_HOST']);
 define('REQUEST_URI', $_SERVER['REQUEST_URI']);
-define('URL', PROTOCOL . '://' . HOST . '/');
-define('CUR_PAGE', PROTOCOL . '://' . HOST . REQUEST_URI);
+define('URL', PROTOCOL . HOST . '/');
+define('CUR_PAGE', PROTOCOL . HOST . REQUEST_URI);
 
 
 //Routes of directories and files
@@ -65,6 +64,11 @@ define('JS', ASSETS . 'js/');
 define('PLUGINS', ASSETS . 'plugins/');
 define('UPLOADS',  ROOT . 'assets' . DS . 'uploads' . DS);
 define('UPLOADED', ASSETS . 'uploads/');
+
+//Routes of files or assets 
+define('CSS_DIR', __DIR__ . '/../../assets/css/');
+define('JS_DIR', __DIR__ . '/../../assets/js/');
+
 
 //Crentials of database
 define('LDB_ENGINE', 'mysql');

@@ -39,6 +39,8 @@ class App
         $this->init_load_functions();
         $this->init_load_composer();
         $this->init_autoload();
+        $this->init_styles();
+        $this->init_scripts();
         $this->init_csrf();
         $this->init_globals();
         $this->init_custom();
@@ -148,6 +150,28 @@ class App
         require_once CLASSES . 'Autoloader.php';
         Autoloader::init();
         return;
+    }
+
+    /**
+     * Método para cargar los estilos
+     */
+
+    private function init_styles(){
+        register_styles([
+            ['file' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css', 'comment' => 'Bootstrap CDN'],
+          ]);
+    }
+
+    /**
+     * Método para cargar los scripts
+     */
+     
+    private function init_scripts(){
+        register_scripts([
+            ['file' => 'https://code.jquery.com/jquery-3.6.0.min.js', 'comment' => 'jQuery'],
+            ['file' => 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', 'comment' => 'Popper.js'],
+            ['file' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', 'comment' => 'Bootstrap'],
+        ]);
     }
 
     /**

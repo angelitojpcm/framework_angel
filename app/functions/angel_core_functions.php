@@ -1058,64 +1058,68 @@ function check_if_demo($flash = true, $redirect = true) {
 }
 
 /**
- * Para registrar una hoja de estilos de forma manual
+ * Para registrar una hoja de estilos de forma manual y automática
  *
  * @param array $stylesheets
  * @param string $comment
  * @return bool
  */
-function register_styles($stylesheets , $comment = null) {
+function register_styles($styles) {
   global $Angel_Styles;
 
-  $Angel_Styles[] = 
-  [
-    'comment' => (!empty($comment) ? $comment : null),
-    'files'   => $stylesheets
-  ];
-
+  foreach ($styles as $style) {
+    // No verificar si el archivo existe para los estilos de CDN
+    if (strpos($style['file'], 'http') !== false || file_exists(CSS_DIR . $style['file'])) {
+      $Angel_Styles[] = 
+      [
+        'comment' => $style['comment'],
+        'files'   => [$style['file']]
+      ];
+    }
+  }
+  
   return true;
 }
 
 /**
- * Para registrar uno o más scripts de forma manual
+ * Carga y muestra las hojas de estilo registradas.
  *
- * @param array $scripts
- * @param string $comment
- * @return bool
- */
-function register_scripts($scripts , $comment = null) {
-  global $Angel_Scripts;
-
-  $Angel_Scripts[] = 
-  [
-    'comment' => (!empty($comment) ? $comment : null),
-    'files'   => $scripts
-  ];
-
-  return true;
-}
-
-/**
- * Carga los estilos registrados de forma manual
- * por la función register_styles()
+ * Esta función carga las hojas de estilo registradas en la variable global $Angel_Styles
+ * y muestra el código HTML para incluirlas en la página.
  *
- * @return string
+ * @return string El código HTML para incluir las hojas de estilo registradas.
  */
 function load_styles() {
   global $Angel_Styles;
+
+  $dir = CSS_DIR;
+  $stylesheets = glob($dir . "{,*/,*/*/}*.css", GLOB_BRACE);
+
+  foreach($stylesheets as $stylesheet) {
+    $stylesheetUrl = CSS . str_replace($dir, '', $stylesheet);
+    // Verificar si el archivo existe antes de incluirlo
+    if (file_exists($stylesheet)) {
+      $Angel_Styles[] = 
+      [
+        'comment' => 'ARCHIVO: ' . basename($stylesheet),
+        'files'   => [$stylesheetUrl]
+      ];
+    }
+  }
+
   $output = '';
 
   if(empty($Angel_Styles)){
     return $output;
   }
 
-	// Iterar sobre cada elemento registrado
+  // Iterar sobre cada elemento registrado
   foreach (json_decode(json_encode($Angel_Styles)) as $css) {
     if($css->comment){
-      $output .= '<!-- '.$css->comment.' -->'."\n";
+      $output .= "\t".'<!-- '.$css->comment.' -->'."\n";
     }
 
-		// Iterar sobre cada path de archivo registrado
+    // Iterar sobre cada path de archivo registrado
     foreach ($css->files as $f) {
       $output .= "\t".'<link rel="stylesheet" href="'.$f.'" >'."\n";
     }
@@ -1125,33 +1129,73 @@ function load_styles() {
 }
 
 /**
- * Carga los scrips registrados de forma manual
+ * Para registrar uno o más scripts de forma manual y automática
+ *
+ * @param array $scripts
+ * @return bool
+ */
+function register_scripts($scripts) {
+  global $Angel_Scripts;
+
+  foreach ($scripts as $script) {
+    // No verificar si el archivo existe para los scripts de CDN
+    if (strpos($script['file'], 'http') !== false || file_exists($script['file'])) {
+      $Angel_Scripts[] = 
+      [
+        'comment' => $script['comment'],
+        'files'   => [$script['file']]
+      ];
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Carga los scrips registrados de forma manual y automática
  * por la función register_scripts()
  *
  * @return string
  */
 function load_scripts() {
   global $Angel_Scripts;
+
+  $dir = JS_DIR;
+  $Scripts = glob($dir . "{,*/,*/*/}*.js", GLOB_BRACE);
+
+  foreach($Scripts as $script) {
+    $scripts = JS . str_replace($dir, '', $script);
+    // Verificar si el archivo existe antes de incluirlo
+    if (file_exists($scripts)) {
+      $Angel_Scripts[] = 
+      [
+        'comment' => 'FILE: ' . basename($script),
+        'files'   => [$scripts]
+      ];
+    }
+  }
+
   $output = '';
 
   if(empty($Angel_Scripts)){
     return $output;
   }
 
-	// Itera sobre todos los elementos registrados
+  // Iterar sobre cada elemento registrado
   foreach (json_decode(json_encode($Angel_Scripts)) as $js) {
     if($js->comment){
-      $output .= '<!-- '.$js->comment.' -->'."\n";
+      $output .= "\t".'<!-- '.$js->comment.' -->'."\n";
     }
 
-		// Itera sobre todos los paths registrados
+    // Iterar sobre cada path de archivo registrado
     foreach ($js->files as $f) {
-      $output .= '<script src="'.$f.'" type="text/javascript"></script>'."\n";
+      $output .= "\t".'<script src="'.$f.'"></script>'."\n";
     }
   }
 
   return $output;
 }
+
 
 /**
  * Registar un nuevo valor para el objeto Angel
@@ -1226,16 +1270,5 @@ function angel_obj_default_config() {
 		'uploaded'     => UPLOADED
 	];
 
-	return true;
-}
-
-/**
- * Registra los scripts y estilos del editor textual Summernote
- *
- * @return bool
- */
-function use_summernote() {
-	register_styles(['https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css'] , 'Summernote');
-	register_scripts(['https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js'] , 'Summernote');
 	return true;
 }
