@@ -1068,16 +1068,26 @@ function register_styles($styles) {
   global $App_Styles;
 
   foreach ($styles as $style) {
-    // No verificar si el archivo existe para los estilos de CDN
-    if (strpos($style['file'], 'http') !== false || file_exists(CSS_DIR . $style['file'])) {
-      $App_Styles[] = 
-      [
-        'comment' => $style['comment'],
-        'files'   => [$style['file']]
-      ];
+    // Saltar el estilo si el campo 'file' está vacío
+    if (empty($style['file'])) {
+      continue;
     }
+
+    // Verificar si el archivo es local
+    if (!filter_var($style['file'], FILTER_VALIDATE_URL)) {
+      $file_path = CSS_DIR . '/' . $style['file'];
+      // Verificar si el archivo local existe
+      if (!file_exists($file_path)) {
+        continue; // Saltar este archivo si no existe
+      }
+    }
+
+    $App_Styles[] = [
+      'comment' => $style['comment'],
+      'files'   => [$style['file']]
+    ];
   }
-  
+
   return true;
 }
 
@@ -1092,21 +1102,6 @@ function register_styles($styles) {
 function load_styles() {
   global $App_Styles;
 
-  $dir = CSS_DIR;
-  $stylesheets = glob($dir . "{,*/,*/*/}*.css", GLOB_BRACE);
-
-  foreach($stylesheets as $stylesheet) {
-    $stylesheetUrl = CSS . str_replace($dir, '', $stylesheet);
-    // Verificar si el archivo existe antes de incluirlo
-    if (file_exists($stylesheet)) {
-      $App_Styles[] = 
-      [
-        'comment' => 'ARCHIVO: ' . basename($stylesheet),
-        'files'   => [$stylesheetUrl]
-      ];
-    }
-  }
-
   $output = '';
 
   if(empty($App_Styles)){
@@ -1114,20 +1109,19 @@ function load_styles() {
   }
 
   // Iterar sobre cada elemento registrado
-  foreach (json_decode(json_encode($App_Styles)) as $css) {
-    if($css->comment){
-      $output .= "\t".'<!-- '.$css->comment.' -->'."\n";
+  foreach ($App_Styles as $css) {
+    if($css['comment']){
+      $output .= "\n\t".'<!-- '.$css['comment'].' -->'."\n";
     }
 
     // Iterar sobre cada path de archivo registrado
-    foreach ($css->files as $f) {
-      $output .= "\t".'<link rel="stylesheet" href="'.$f.'" >'."\n";
+    foreach ($css['files'] as $f) {
+      $output .= "\t".'<link rel="stylesheet" href="'.CSS.$f.'" >'."\n";
     }
   }
 
   return $output;
 }
-
 /**
  * Para registrar uno o más scripts de forma manual y automática
  *
@@ -1138,14 +1132,24 @@ function register_scripts($scripts) {
   global $App_Scripts;
 
   foreach ($scripts as $script) {
-    // No verificar si el archivo existe para los scripts de CDN
-    if (strpos($script['file'], 'http') !== false || file_exists($script['file'])) {
-      $App_Scripts[] = 
-      [
-        'comment' => $script['comment'],
-        'files'   => [$script['file']]
-      ];
+    // Saltar el script si el campo 'file' está vacío
+    if (empty($script['file'])) {
+      continue;
     }
+
+    // Verificar si el archivo es local
+    if (!filter_var($script['file'], FILTER_VALIDATE_URL)) {
+      $file_path = JS_DIR . '/' . $script['file'];
+      // Verificar si el archivo local existe
+      if (!file_exists($file_path)) {
+        continue; // Saltar este archivo si no existe
+      }
+    }
+
+    $App_Scripts[] = [
+      'comment' => $script['comment'],
+      'files'   => [$script['file']]
+    ];
   }
 
   return true;
@@ -1160,21 +1164,6 @@ function register_scripts($scripts) {
 function load_scripts() {
   global $App_Scripts;
 
-  $dir = JS_DIR;
-  $Scripts = glob($dir . "{,*/,*/*/}*.js", GLOB_BRACE);
-
-  foreach($Scripts as $script) {
-    $scripts = JS . str_replace($dir, '', $script);
-    // Verificar si el archivo existe antes de incluirlo
-    if (file_exists($script)) {
-      $App_Scripts[] = 
-      [
-        'comment' => 'FILE: ' . basename($script),
-        'files'   => [$scripts]
-      ];
-    }
-  }
-
   $output = '';
 
   if(empty($App_Scripts)){
@@ -1182,20 +1171,19 @@ function load_scripts() {
   }
 
   // Iterar sobre cada elemento registrado
-  foreach (json_decode(json_encode($App_Scripts)) as $js) {
-    if($js->comment){
-      $output .= "\t".'<!-- '.$js->comment.' -->'."\n";
+  foreach ($App_Scripts as $js) {
+    if($js['comment']){
+      $output .= "\n\t".'<!-- '.$js['comment'].' -->'."\n";
     }
 
     // Iterar sobre cada path de archivo registrado
-    foreach ($js->files as $f) {
-      $output .= "\t".'<script src="'.$f.'"></script>'."\n";
+    foreach ($js['files'] as $f) {
+      $output .= "\t".'<script src="'.JS.$f.'"></script>'."\n";
     }
   }
 
   return $output;
 }
-
 
 /**
  * Registar un nuevo valor para el objeto del Sistema (App)

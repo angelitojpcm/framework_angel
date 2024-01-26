@@ -158,21 +158,49 @@ class App
 
     private function init_styles(){
         register_styles([
-            ['file' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css', 'comment' => 'Bootstrap CDN'],
+            ['file' => 'bootstrap.min.css', 'comment' => 'Bootstrap'],
+            ['file' => 'font-awesome.min.css', 'comment' => 'Font Awesome'],
+            ['file' => 'themify-icons.css', 'comment' => 'Themify Icons'],
+            ['file' => 'flaticon-set.css', 'comment' => 'Flaticon Set'],
+            ['file' => 'elegant-icons.css', 'comment' => 'Elegant Icons'],
+            ['file' => 'magnific-popup.css', 'comment' => 'Magnific Popup'],
+            ['file' => 'owl.carousel.min.css', 'comment' => 'Owl Carousel'],
+            ['file' => 'owl.theme.default.min.css', 'comment' => 'Owl Theme Default'],
+            ['file' => 'animate.css', 'comment' => 'Animate'],
+            ['file' => 'bootsnav.css', 'comment' => 'Bootsnav'],
+            ['file' => 'style.css', 'comment' => 'Style'],
+            ['file' => 'responsive.css', 'comment' => 'Responsive'],
+            ['file' => 'https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap', 'comment' => 'Google'],
           ]);
     }
 
     /**
      * Método para cargar los scripts
      */
-     
+
     private function init_scripts(){
         register_scripts([
-            ['file' => 'https://code.jquery.com/jquery-3.6.0.min.js', 'comment' => 'jQuery'],
-            ['file' => 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', 'comment' => 'Popper.js'],
-            ['file' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', 'comment' => 'Bootstrap'],
+            ['file' => 'jquery-1.12.4.min.js', 'comment' => 'JQuery'],
+            ['file' => 'bootstrap.min.js', 'comment' => 'Bootsrap'],
+            ['file' => 'jquery.appear.js', 'comment' => 'Jquery Appear'],
+            ['file' => 'jquery.easing.min.js', 'comment' => 'Jquery Easing'],
+            ['file' => 'jquery.magnific-popup.min.js', 'comment' => 'Jquery Magnific Popup'],
+            ['file' => 'modernizr.custom.13711.js', 'comment' => 'Modernizr'],
+            ['file' => 'owl.carousel.min.js', 'comment' => 'Owl Carousel'],
+            ['file' => 'wow.min.js', 'comment' => 'Wow'],
+            ['file' => 'progress-bar.min.js', 'comment' => 'Progress Bar'],
+            ['file' => 'isotope.pkgd.min.js', 'comment' => 'Isotope'],
+            ['file' => 'imagesloaded.pkgd.min.js', 'comment' => 'Images Loaded'],
+            ['file' => 'count-to.js', 'comment' => 'Count to'],
+            ['file' => 'YTPlayer.min.js', 'comment' => 'YTPlayer'],
+            ['file' => 'jquery.nice-select.min.js', 'comment' => 'Jquery Nice'],
+            ['file' => 'loopcounter.js', 'comment' => 'Loop Counter'],
+            ['file' => 'bootsnav.js', 'comment' => 'Bootsnav'],
+            ['file' => 'main.js', 'comment' => 'Main'],
+            ['file' => 'custom.js', 'comment' => 'Custom'],
         ]);
     }
+
 
     /**
      * Método para cargar el token CSRF
@@ -237,7 +265,7 @@ class App
     {
         $this->filter_url();
 
-        //Nececitamos saber si esta psando el nombe de un controlador de URI 
+        //Nececitamos saber si esta psando el nombe de un controlador de URI
         //$this->uri[0] es el controlador en cuestion
         if (isset($this->uri[0])) {
             $current_controller = $this->uri[0];

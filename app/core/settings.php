@@ -16,7 +16,7 @@ define('LANG', $this->lng);
 define('APP_NAME', $this->framework);
 define('APP_VERSION', $this->version);
 // define('SITE_NAME', $this->sitename);   
-define('SITE_NAME', 'Angel Framework');
+define('SITE_NAME', 'SOS 3ANGELES');
 define('SITE_EMAIL', 'angelitojpcmantilla22@gmail.com');
 define('SITE_VERSION', '1.0.0');
 
