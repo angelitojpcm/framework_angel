@@ -13,8 +13,8 @@ date_default_timezone_set('America/Bogota');
 define('LANG', $this->lng);
 
 //Version of apllication
-define('ANGEL_NAME', $this->framework);
-define('ANGEL_VERSION', $this->version);
+define('APP_NAME', $this->framework);
+define('APP_VERSION', $this->version);
 // define('SITE_NAME', $this->sitename);   
 define('SITE_NAME', 'Angel Framework');
 define('SITE_EMAIL', 'angelitojpcmantilla22@gmail.com');

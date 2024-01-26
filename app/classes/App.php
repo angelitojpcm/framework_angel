@@ -74,7 +74,7 @@ class App
         //desde un comienzo en la ejecución del framework
 
 
-        $file = 'app/config/angel_config.php';
+        $file = 'app/config/app_config.php';
         if (!is_file($file)) {
             die(sprintf('El archivo %s no se encuentra, es requerido para que %s funcione.', $file, $this->framework));
         }
@@ -99,14 +99,14 @@ class App
 
     private function init_load_functions()
     {
-        $file = FUNCTIONS . 'angel_core_functions.php';
+        $file = FUNCTIONS . 'app_core_functions.php';
         if (!is_file($file)) {
             die(sprintf('El archivo %s no se encuentra, es requerido para que %s funcione.', $file, $this->framework));
         }
 
         require_once $file;
 
-        $file = FUNCTIONS . 'angel_custom_functions.php';
+        $file = FUNCTIONS . 'app_custom_functions.php';
 
         if (!is_file($file)) {
             die(sprintf('El archivo %s no se encuentra, es requerido para que %s funcione.', $file, $this->framework));
@@ -195,7 +195,7 @@ class App
     private function init_globals()
     {
         // Objeto Angel que será insertado en el footer como script javascript dinámico para fácil acceso
-        angel_obj_default_config();
+        app_obj_default_config();
     }
 
     /**

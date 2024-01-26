@@ -46,9 +46,9 @@ function get_version()
  * @return string
  */
 
-function get_angel_name()
+function get_app_name()
 {
-  return ANGEL_NAME;
+  return APP_NAME;
 }
 
 /**
@@ -56,9 +56,9 @@ function get_angel_name()
  * 
  * @return string
  */
-function get_angel_version()
+function get_app_version()
 {
-  return ANGEL_VERSION;
+  return APP_VERSION;
 }
 
 /**
@@ -284,8 +284,8 @@ function logger($message, $type = 'debug', $output = false)
 
   $message = "[" . strtoupper($type) . "] $now_time - $message";
 
-  if (!$fh = fopen(LOGS . "angel_log.log", 'a')) {
-    error_log(sprintf('Can not open this file on %s', LOGS . 'angel_log.log'));
+  if (!$fh = fopen(LOGS . "app_log.log", 'a')) {
+    error_log(sprintf('Can not open this file on %s', LOGS . 'app_log.log'));
     return false;
   }
 
@@ -1065,12 +1065,12 @@ function check_if_demo($flash = true, $redirect = true) {
  * @return bool
  */
 function register_styles($styles) {
-  global $Angel_Styles;
+  global $App_Styles;
 
   foreach ($styles as $style) {
     // No verificar si el archivo existe para los estilos de CDN
     if (strpos($style['file'], 'http') !== false || file_exists(CSS_DIR . $style['file'])) {
-      $Angel_Styles[] = 
+      $App_Styles[] = 
       [
         'comment' => $style['comment'],
         'files'   => [$style['file']]
@@ -1084,13 +1084,13 @@ function register_styles($styles) {
 /**
  * Carga y muestra las hojas de estilo registradas.
  *
- * Esta función carga las hojas de estilo registradas en la variable global $Angel_Styles
+ * Esta función carga las hojas de estilo registradas en la variable global $App_Styles
  * y muestra el código HTML para incluirlas en la página.
  *
  * @return string El código HTML para incluir las hojas de estilo registradas.
  */
 function load_styles() {
-  global $Angel_Styles;
+  global $App_Styles;
 
   $dir = CSS_DIR;
   $stylesheets = glob($dir . "{,*/,*/*/}*.css", GLOB_BRACE);
@@ -1099,7 +1099,7 @@ function load_styles() {
     $stylesheetUrl = CSS . str_replace($dir, '', $stylesheet);
     // Verificar si el archivo existe antes de incluirlo
     if (file_exists($stylesheet)) {
-      $Angel_Styles[] = 
+      $App_Styles[] = 
       [
         'comment' => 'ARCHIVO: ' . basename($stylesheet),
         'files'   => [$stylesheetUrl]
@@ -1109,12 +1109,12 @@ function load_styles() {
 
   $output = '';
 
-  if(empty($Angel_Styles)){
+  if(empty($App_Styles)){
     return $output;
   }
 
   // Iterar sobre cada elemento registrado
-  foreach (json_decode(json_encode($Angel_Styles)) as $css) {
+  foreach (json_decode(json_encode($App_Styles)) as $css) {
     if($css->comment){
       $output .= "\t".'<!-- '.$css->comment.' -->'."\n";
     }
@@ -1135,12 +1135,12 @@ function load_styles() {
  * @return bool
  */
 function register_scripts($scripts) {
-  global $Angel_Scripts;
+  global $App_Scripts;
 
   foreach ($scripts as $script) {
     // No verificar si el archivo existe para los scripts de CDN
     if (strpos($script['file'], 'http') !== false || file_exists($script['file'])) {
-      $Angel_Scripts[] = 
+      $App_Scripts[] = 
       [
         'comment' => $script['comment'],
         'files'   => [$script['file']]
@@ -1158,7 +1158,7 @@ function register_scripts($scripts) {
  * @return string
  */
 function load_scripts() {
-  global $Angel_Scripts;
+  global $App_Scripts;
 
   $dir = JS_DIR;
   $Scripts = glob($dir . "{,*/,*/*/}*.js", GLOB_BRACE);
@@ -1167,7 +1167,7 @@ function load_scripts() {
     $scripts = JS . str_replace($dir, '', $script);
     // Verificar si el archivo existe antes de incluirlo
     if (file_exists($scripts)) {
-      $Angel_Scripts[] = 
+      $App_Scripts[] = 
       [
         'comment' => 'FILE: ' . basename($script),
         'files'   => [$scripts]
@@ -1177,12 +1177,12 @@ function load_scripts() {
 
   $output = '';
 
-  if(empty($Angel_Scripts)){
+  if(empty($App_Scripts)){
     return $output;
   }
 
   // Iterar sobre cada elemento registrado
-  foreach (json_decode(json_encode($Angel_Scripts)) as $js) {
+  foreach (json_decode(json_encode($App_Scripts)) as $js) {
     if($js->comment){
       $output .= "\t".'<!-- '.$js->comment.' -->'."\n";
     }
@@ -1198,7 +1198,7 @@ function load_scripts() {
 
 
 /**
- * Registar un nuevo valor para el objeto Angel
+ * Registar un nuevo valor para el objeto del Sistema (App)
  * insertado en el pie del sitio como objeto para
  * acceder a los parámetros de forma sencilla
  *
@@ -1206,8 +1206,8 @@ function load_scripts() {
  * @param mixed $value
  * @return bool
  */
-function register_to_Angel_obj($key, $value) {
-	global $Angel_Object;
+function register_to_App_obj($key, $value) {
+	global $App_Object;
 
   $Angel_Scripts[$key] = clean($value);
 
@@ -1220,19 +1220,19 @@ function register_to_Angel_obj($key, $value) {
  *
  * @return string
  */
-function load_Angel_obj() {
-	global $Angel_Object;
+function load_App_obj() {
+	global $App_Object;
 	$output = '';
 
-  if(empty($Angel_Object)){
+  if(empty($App_Object)){
     return $output;
   }
 
 	$output .= '<script>';
-	$output .= 'var Angel = {'."\n";
+	$output .= 'var App = {'."\n";
 
 	// Iterar sobre todos los elementos registrados
-  foreach ($Angel_Object as $k => $v) {
+  foreach ($App_Object as $k => $v) {
 		$output .= sprintf('%s: "%s",'."\n", $k, $v);
 	}
 
@@ -1243,19 +1243,19 @@ function load_Angel_obj() {
 }
 
 /**
- * Registra los parámetro por defecto de Angel
+ * Registra los parámetro por defecto del Sistema
  *
  * @return bool
  */
-function angel_obj_default_config() {
-	global $Angel_Object;
+function app_obj_default_config() {
+	global $App_Object;
 
-	$Angel_Object =
+	$App_Object =
 	[
 		'sitename'     => get_sitename(),
 		'version'      => get_version(),
-		'angel_name'     => get_angel_name(),
-		'angel_version'  => get_angel_version(),
+		'app_name'     => get_app_name(),
+		'app_version'  => get_app_version(),
 		'csrf'         => CSRF_TOKEN,
 		'url'          => URL,
 		'cur_page'     => CUR_PAGE,
