@@ -1116,7 +1116,9 @@ function load_styles() {
 
     // Iterar sobre cada path de archivo registrado
     foreach ($css['files'] as $f) {
-      $output .= "\t".'<link rel="stylesheet" href="'.CSS.$f.'" >'."\n";
+      // Si $f es una URL, úsalo tal cual. Si no, añade CSS antes de él.
+      $href = filter_var($f, FILTER_VALIDATE_URL) ? $f : CSS.$f;
+      $output .= "\t".'<link rel="stylesheet" href="'.$href.'" >'."\n";
     }
   }
 
@@ -1259,4 +1261,48 @@ function app_obj_default_config() {
 	];
 
 	return true;
+}
+
+/**
+ * Crea etiquetas meta para una página web.
+ *
+ * @param string $description La descripción para la etiqueta meta.
+ * @param string|null $fb_pixel El ID de Facebook Pixel (opcional).
+ * @return string Las etiquetas meta generadas.
+ */
+function create_meta_tags($d, $fb_pixel = null) {
+  $title = isset($d->title) ? $d->title.' - '.get_sitename() : 'Bienvenido - '.get_sitename();
+  $description = "Aquí va la descripción de tu página"; // Reemplaza esto con la descripción real
+  $keywords = "palabra clave 1, palabra clave 2, palabra clave 3"; // Reemplaza esto con tus palabras clave
+
+  $meta  = "\n\t".'<meta name="description" content="' . $description . '">' . "\n";
+  $meta .= "\n\t".'<meta name="keywords" content="' . $keywords . '">' . "\n";
+  $meta .= "\n\t".'<meta property="og:title" content="' . $title . '">' . "\n";
+  $meta .= "\n\t".'<meta property="og:description" content="' . $description . '">' . "\n";
+
+  $meta .= "\n\t".'<meta property="og:site_name" content="' . get_sitename() . '">' . "\n";
+  if ($fb_pixel) {
+    $meta .= "\n\t<!-- Código de Facebook Pixel -->\n";
+    $meta .= "\n\t<script>\n";
+    $meta .= "  !function(f,b,e,v,n,t,s){\n";
+    $meta .= "    if(f.fbq)return;n=f.fbq=function(){n.callMethod?\n";
+    $meta .= "    n.callMethod.apply(n,arguments):n.queue.push(arguments)};\n";
+    $meta .= "    if(!f._fbq)f._fbq=n;\n";
+    $meta .= "    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];\n";
+    $meta .= "    t=b.createElement(e);t.async=!0;\n";
+    $meta .= "    t.src=v;s=b.getElementsByTagName(e)[0];\n";
+    $meta .= "    s.parentNode.insertBefore(t,s)\n";
+    $meta .= "  }(window, document,'script','https://connect.facebook.net/es_ES/fbevents.js');\n";
+    $meta .= "  fbq('init', '" . $fb_pixel . "');\n";
+    $meta .= "  fbq('track', 'PageView');\n";
+    $meta .= "\n\t</script>\n";
+    $meta .= "\n\t<noscript>\n";
+    $meta .= "  <img height='1' width='1' style='display:none'\n";
+    $meta .= "  src='https://www.facebook.com/tr?id=" . $fb_pixel . "&ev=PageView&noscript=1'\n";
+    $meta .= "  />\n";
+    $meta .= "\n\t</noscript>\n";
+    $meta .= "\n\t<!-- End Facebook Pixel Code -->\n";
+  }
+  
+  return $meta;
 }

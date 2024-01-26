@@ -45,7 +45,6 @@ class App
         $this->init_csrf();
         $this->init_globals();
         $this->init_custom();
-        $this->dispatch();
     }
 
 
@@ -315,6 +314,14 @@ class App
         }
     }
 
+    /**
+     * Método para cargar los metatags
+     */
+    public function loadMetaTags($d) {
+        $fb_pixel = 'YOUR_FACEBOOK_PIXEL_ID';
+        
+        return create_meta_tags($d, $fb_pixel);
+    }
 
     /**
      * Iniciar el framework
@@ -324,7 +331,10 @@ class App
 
     public static function run()
     {
-        $angel =  new self();
-        return;
+        global $app;
+        global $functions;
+        $app =  new self();
+
+        $app->dispatch();
     }
 }
