@@ -82,5 +82,6 @@ define('LDB_CHARSET', 'utf8');
 //Controler for default / the method for default / and controller for error por default
 define('DEFAULT_CONTROLLER', 'home');
 define('DEFAULT_METHOD', 'index');
-define('DEFAULT_ERROR_CONTROLLER', 'error');
+define('DEFAULT_ERROR_CONTROLLER', 'errors');
+define('DEFAULT_ERROR_METHOD', 'error404');
 

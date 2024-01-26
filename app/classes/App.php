@@ -17,6 +17,7 @@ class App
     private $lng = "es";
     private $uri = [];
     private $use_composer = true;
+    private $router;
 
 
     //Principal function of the framework
@@ -261,66 +262,59 @@ class App
      * de la url
      * @return void
      */
-    private function dispatch()
-    {
+    private function dispatch() {
+        // Filtrar la URL y separar la URI
         $this->filter_url();
 
-        //Nececitamos saber si esta psando el nombe de un controlador de URI
-        //$this->uri[0] es el controlador en cuestion
-        if (isset($this->uri[0])) {
+        // Comprobar si se ha proporcionado un controlador en la URI
+        if(isset($this->uri[0])) {
             $current_controller = $this->uri[0];
             unset($this->uri[0]);
         } else {
+            // Si no se ha proporcionado un controlador, usar el controlador por defecto
             $current_controller = DEFAULT_CONTROLLER;
         }
 
-
-        //Ejecutar el controlador
-        //Verificar si el controlador existe
-        $controller = $current_controller . 'Controller';
-        if (!class_exists($controller)) {
+        // Comprobar si la clase del controlador existe
+        $controller = $current_controller.'Controller';
+        if(!class_exists($controller)) {
+            // Si no existe, usar el controlador de errores por defecto
             $current_controller = DEFAULT_ERROR_CONTROLLER;
-            $controller = DEFAULT_CONTROLLER . 'Controller';
-        }
-
-        //Instanciar el metodo del controlador solicitado
-
-        if (isset($this->uri[1])) {
-            $method = str_replace('-', '_', $this->uri[1]); //Reemplazar guiones por guiones bajos
-
-            //Verificar si el metodo existe dentro de la clase a ejecutar (controlador)
-            if (!method_exists($controller, $method)) {
-                $controller = DEFAULT_ERROR_CONTROLLER . 'Controller';
-                $current_method = DEFAULT_METHOD;
-                $current_controller = DEFAULT_ERROR_CONTROLLER;
-            } else {
-                $current_method = $method;
-            }
-            unset($this->uri[1]);
+            $controller = DEFAULT_ERROR_CONTROLLER.'Controller';
+            $method = DEFAULT_ERROR_METHOD;
         } else {
-            $current_method = DEFAULT_METHOD;
+            // Comprobar si se ha proporcionado un método en la URI
+            if(isset($this->uri[1])) {
+                $method = str_replace('-', '_', $this->uri[1]);
+
+                // Comprobar si el método existe en la clase del controlador
+                if(!method_exists($controller, $method)) {
+                    // Si no existe, usar el controlador y el método de errores por defecto
+                    $controller = DEFAULT_ERROR_CONTROLLER.'Controller';
+                    $method = DEFAULT_ERROR_METHOD;
+                    $current_controller = DEFAULT_ERROR_CONTROLLER;
+                }
+            } else {
+                // Si no se ha proporcionado un método, usar el método por defecto
+                $method = DEFAULT_METHOD;
+            }
         }
 
-
-        //Creando constantes para usar mas adelante
+        // Definir constantes para el controlador y el método actuales
         define('CONTROLLER', $current_controller);
-        define('METHOD', $current_method);
+        define('METHOD', $method);
 
-        //Obteniendo los parametros de la url
-        $params = array_values(($this->uri) ? [] : $this->uri);
-
-        // Instanciando el controlador con los parámetros
+        // Crear una nueva instancia del controlador y llamar al método con los parámetros proporcionados
+        $params = array_values(empty($this->uri) ? [] : $this->uri);
         $controller = new $controller($params);
 
-        //LLama al metodo que el usuario solicita
-        if (empty($params)) {
-            call_user_func(array($controller, $current_method));
+        if(empty($params)) {
+            call_user_func([$controller, $method]);
         } else {
-            call_user_func_array(array($controller, $current_method), $params);
+            call_user_func_array([$controller, $method], $params);
         }
-
-        return;
     }
+
 
     /**
      * Iniciar el framework
