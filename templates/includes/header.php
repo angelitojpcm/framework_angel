@@ -8,8 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="<?php echo BASEPATH; ?>">
     <?php echo $app->loadMetaTags($d); ?>
-    <title><?php echo isset($d->title) ? $d->title.' - '.get_sitename() : 'Bienvenido - '.get_sitename(); ?></title>
+    <title><?php echo isset($d->title) ? $d->title . ' - ' . get_sitename() : 'Bienvenido - ' . get_sitename(); ?></title>
     <?php echo load_styles(); ?>
 </head>
 
-<body>
+<body class="<?= isset($d->bg) ? $d->bg: '' ?>">
+
+    <!-- Preloader Start -->
+    <div class="se-pre-con"></div>
+    <!-- Preloader Ends -->

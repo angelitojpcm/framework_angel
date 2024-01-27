@@ -7,14 +7,14 @@ class View {
     global $app;
     global $d;
     $d = to_object($data); // $data en array assoc o $d en objectos
-
     if (is_object($d)) {
       $d->app = $app; // Agrega $app al objeto $d
+      $d->auth = new Auth();
     } else {
       throw new Exception('La conversión a objeto falló.');
     }
 
-    $viewPath = VIEWS . CONTROLLER . DS . $view . 'View.php';
+    $viewPath = VIEWS . CONTROLLER . DS . $view . '_view.php';
     if(!file_exists($viewPath)) {
       throw new Exception(sprintf('No existe la vista "%sView" en la carpeta "%s".', $view, CONTROLLER));
     }

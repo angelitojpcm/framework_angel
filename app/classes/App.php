@@ -305,7 +305,8 @@ class App
 
         // Crear una nueva instancia del controlador y llamar al método con los parámetros proporcionados
         $params = array_values(empty($this->uri) ? [] : $this->uri);
-        $controller = new $controller($params);
+        $auth = new Auth();
+        $controller = new $controller($params, $auth);
 
         if(empty($params)) {
             call_user_func([$controller, $method]);

@@ -36,7 +36,7 @@ class Auth
     $self    = new self();
     $session =
     [
-      'logged' => true,
+      'logged' => false,
       'token'  => random_password(32),
       'id'     => $user_id,
       'ssid'   => session_id(),
